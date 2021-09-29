@@ -4,9 +4,9 @@
   "description": "Simple facebook messenger bot ",
   "main": "index.js",
   "scripts": {
-    "test-app": "NODE_ENV=test node index.js",
+    "test-app": "NODE_ENV=test node src/app.js",
     "test": "NODE_ENV=test mocha test/ --recursive",
-    "dev": "nodemon index.js"
+    "dev": "nodemon src/app.js"
   },
   "author": "Matej Prokop",
   "license": "ISC",
