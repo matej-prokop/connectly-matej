@@ -1,5 +1,7 @@
 const supertest = require("supertest");
 const nock = require("nock");
+const chai = require("chai");
+const expect = chai.expect;
 
 // this start my bot application
 require("../src/app");
@@ -14,7 +16,7 @@ describe("<shopifyIntegration>", () => {
 
   it("ClosedOrder event triggers bot which sends survey to customer", async () => {
     const scope = nock(FACEBOOK_API_URL)
-      .post("/v12.0/me/messages")
+      .post(`/v12.0/me/messages?access_token=${FB_ACCESS_TOKEN}`)
       .reply(200, {});
 
     const capturedRequestPromise = new Promise((resolve) => {
@@ -33,6 +35,6 @@ describe("<shopifyIntegration>", () => {
       .expect(200, { status: 200 });
 
     const capturedReq = await capturedRequestPromise;
-    expect(capturedReq.getHeader("access_token")).to.equal(FB_ACCESS_TOKEN);
+    expect(capturedReq).to.exist;
   });
 });
