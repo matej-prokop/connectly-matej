@@ -1,9 +1,8 @@
 const supertest = require("supertest");
 const nock = require("nock");
 
-const dotenv = require("dotenv");
-const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : ".env";
-dotenv.config({ path: envFile });
+// this start my bot application
+require("../src/app");
 
 const FACEBOOK_API_URL = process.env.FB_API_URL;
 const FB_ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
@@ -15,7 +14,7 @@ describe("<shopifyIntegration>", () => {
 
   it("ClosedOrder event triggers bot which sends survey to customer", async () => {
     const scope = nock(FACEBOOK_API_URL)
-      .get("/v12.0/me/messages")
+      .post("/v12.0/me/messages")
       .reply(200, {});
 
     const capturedRequestPromise = new Promise((resolve) => {
