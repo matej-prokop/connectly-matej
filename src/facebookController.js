@@ -1,6 +1,16 @@
 const VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 
-module.exports = ({ sendApi, surveyStorage }) => {
+const normalizeQuickReplyScore = (quickReplyPayload) => {
+  if (quickReplyPayload === "SURV_Good") {
+    return 5;
+  } else if (quickReplyPayload === "SURV_Average") {
+    return 3;
+  } else {
+    return 1;
+  }
+};
+
+module.exports = ({ sendApi, surveyStorage, nlpApi }) => {
   return {
     webhook: (req, res) => {
       let body = req.body;
@@ -23,25 +33,38 @@ module.exports = ({ sendApi, surveyStorage }) => {
           if (quickReplyPayload && quickReplyPayload.startsWith("SURV_")) {
             surveyStorage.saveSurveyResponse({
               customerFbId: sender.id,
-              response: quickReplyPayload,
+              response: normalizeQuickReplyScore(quickReplyPayload), // Bad => 1, Average => 3, Good => 5
             });
-          } else if (message?.text === "Thanks for the service!") {
-            console.log(`DEBUG: Sending a message in response to 'Thank you'`);
-            const { sender } = webhook_event;
-            sendApi
-              .sendStandardMessage({
-                recipientId: sender.id,
-                text: "We are glad that you are our customer! How would you rate your experience with us so far?",
-              })
-              .catch((err) => {
-                console.log(`Failed to send message. ${err}`);
-                if (err.response) {
-                  console.log(
-                    `Error response: ${JSON.stringify(err.response.body)}`
-                  );
-                  console.log(`Error response (text): ${err.response.text}`);
-                }
-              });
+          } else {
+            nlpApi.verifyMessage({ input: message?.text }).then((response) => {
+              const { body } = response;
+              const { shouldPromptForReview, isReview, reviewScore } = body;
+
+              if (isReview) {
+                surveyStorage.saveSurveyResponse({
+                  customerFbId: sender.id,
+                  response: reviewScore, // 1 - 5
+                });
+              } else if (shouldPromptForReview) {
+                const { sender } = webhook_event;
+                sendApi
+                  .sendStandardMessage({
+                    recipientId: sender.id,
+                    text: "We are glad that you are our customer! How would you rate your experience with us so far?",
+                  })
+                  .catch((err) => {
+                    console.log(`Failed to send message. ${err}`);
+                    if (err.response) {
+                      console.log(
+                        `Error response: ${JSON.stringify(err.response.body)}`
+                      );
+                      console.log(
+                        `Error response (text): ${err.response.text}`
+                      );
+                    }
+                  });
+              }
+            });
           }
         });
 
