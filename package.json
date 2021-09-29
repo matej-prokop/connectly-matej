@@ -1,0 +1,24 @@
+{
+  "name": "connectly-matej",
+  "version": "1.0.0",
+  "description": "Simple facebook messenger bot ",
+  "main": "index.js",
+  "scripts": {
+    "test-app": "NODE_ENV=test node index.js",
+    "test": "NODE_ENV=test mocha test/ --recursive",
+    "dev": "nodemon index.js"
+  },
+  "author": "Matej Prokop",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "superagent": "^6.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^9.1.2",
+    "nock": "^13.1.3",
+    "nodemon": "^2.0.13",
+    "supertest": "^6.1.6"
+  }
+}

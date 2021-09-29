@@ -1,0 +1,20 @@
+{
+  sender: { id: '6808083265883540' },
+  recipient: { id: '277618407384925' },
+  timestamp: 1632853524585,
+  message: {
+    mid: 'm_2TrkGo6z_-T04zYG945f8uNcUoCghJqG78JkGdYMz0hcT9WbNu0OM1QO7p9uzthSIz1RAqlX872GWJ1F2FhfjQ',
+    text: 'Red',
+    quick_reply: { payload: '<POSTBACK_PAYLOAD_RED>' }
+  }
+}
+
+{
+  sender: { id: '6808083265883540' },
+  recipient: { id: '277618407384925' },
+  timestamp: 1632853482760,
+  message: {
+    mid: 'm_83aT0_AeL1l9ZKxz76AxEuNcUoCghJqG78JkGdYMz0gQOzp4NPLMybXTnwvEnhNPAKsqsx_-qYlYt2zUezXWwg',
+    text: '13'
+  }
+}
